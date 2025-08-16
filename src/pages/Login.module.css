@@ -3,7 +3,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, hsl(var(--go3net-blue)), hsl(var(--go3net-dark-blue)));
+  background: linear-gradient(135deg, 
+    hsl(var(--background)) 0%, 
+    hsl(var(--go3net-light-grey)) 100%);
   padding: 2rem;
 }
 
@@ -11,9 +13,8 @@
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  background: hsl(var(--card));
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid hsl(var(--border));
-  box-shadow: var(--shadow-elegant);
 }
 
 .header {
@@ -22,14 +23,15 @@
 }
 
 .header h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: hsl(var(--go3net-blue));
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
   margin-bottom: 0.5rem;
 }
 
 .header p {
   color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
 }
 
 .form {
@@ -47,16 +49,16 @@
 .submitButton {
   background: hsl(var(--go3net-blue));
   color: white;
-  transition: var(--transition-smooth);
+  font-weight: 600;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .submitButton:hover {
-  background: hsl(var(--go3net-dark-blue));
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-glow);
+  background: hsl(var(--go3net-blue) / 0.9);
 }
 
 .submitButton:disabled {
-  opacity: 0.7;
-  transform: none;
+  opacity: 0.5;
+  cursor: not-allowed;
 }

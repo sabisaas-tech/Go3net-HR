@@ -1,235 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
-import { StatsGrid } from '../components/Dashboard/StatsCard/StatsCard';
-import { UserManagement } from '../components/Dashboard/UserManagement/UserManagement';
-import { Users, UserCheck, Shield, TrendingUp, Calendar, FileText, ClipboardList, AlertTriangle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { apiService } from '../services/api';
+import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
+import { StatsCard } from '../components/Dashboard/StatsCard/StatsCard';
+import { showToast } from '../services/toastService';
 
-interface DashboardProps {
-  userRole?: string;
-  userName?: string;
-  userEmail?: string;
+interface Stats {
+  totalEmployees: number;
+  activeTasks: number;
+  completedTasks: number;
+  pendingTasks: number;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({
-  userRole,
-  userName,
-  userEmail
-}) => {
+const Dashboard = () => {
   const { user } = useAuth();
-  const [stats, setStats] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Use auth context user data if available, fallback to props
-  const currentUserRole = user?.role || userRole || 'employee';
-  const currentUserName = user ? `${user.firstName} ${user.lastName}` : userName || 'User';
-  const currentUserEmail = user?.email || userEmail || '';
+  const [stats, setStats] = useState<Stats>({
+    totalEmployees: 0,
+    activeTasks: 0,
+    completedTasks: 0,
+    pendingTasks: 0
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadStats();
-  }, [currentUserRole]);
+    const fetchStats = async () => {
+      try {
+        const [employeeStats, taskStats] = await Promise.all([
+          apiService.getEmployeeStatistics().catch(() => ({ data: { total: 0 } })),
+          apiService.getTaskStatistics().catch(() => ({ 
+            data: { active: 0, completed: 0, pending: 0 }
+          }))
+        ]);
 
-  const loadStats = async () => {
-    try {
-      const requests = [];
-      
-      if (['super-admin', 'hr-admin'].includes(currentUserRole)) {
-        requests.push(apiService.getEmployeeStatistics());
-      }
-      
-      if (user?.permissions.includes('tasks.read')) {
-        requests.push(apiService.getTaskStatistics());
-      }
-
-      const responses = await Promise.allSettled(requests);
-      // Process responses and set stats based on role
-      setStatsFromResponses(responses, currentUserRole);
-    } catch (error) {
-      console.error('Failed to load stats:', error);
-      setStatsFromRole(currentUserRole);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const setStatsFromResponses = (responses: any[], role: string) => {
-    // For now, use static stats until API returns proper format
-    setStatsFromRole(role);
-  };
-
-  const setStatsFromRole = (role: string) => {
-    const getStatsForRole = (role: string) => {
-      switch (role) {
-        case 'super-admin':
-          return [
-            {
-              title: 'Total Users',
-              value: 1247,
-              icon: Users,
-              change: { value: 12, period: 'last month', type: 'positive' as const },
-              color: 'blue' as const
-            },
-            {
-              title: 'Active Sessions',
-              value: 892,
-              icon: Shield,
-              change: { value: 5, period: 'last week', type: 'positive' as const },
-              color: 'green' as const
-            },
-            {
-              title: 'System Health',
-              value: '99.9%',
-              icon: TrendingUp,
-              change: { value: 0.1, period: 'uptime', type: 'positive' as const },
-              color: 'cyan' as const
-            },
-            {
-              title: 'Security Alerts',
-              value: 3,
-              icon: AlertTriangle,
-              change: { value: 2, period: 'yesterday', type: 'negative' as const },
-              color: 'orange' as const
-            }
-          ];
-
-        case 'hr-admin':
-          return [
-            {
-              title: 'Total Employees',
-              value: 456,
-              icon: Users,
-              change: { value: 8, period: 'last month', type: 'positive' as const },
-              color: 'blue' as const
-            },
-            {
-              title: 'Active Recruitments',
-              value: 23,
-              icon: UserCheck,
-              change: { value: 15, period: 'this week', type: 'positive' as const },
-              color: 'green' as const
-            },
-            {
-              title: 'Pending Leave Requests',
-              value: 12,
-              icon: Calendar,
-              change: { value: 3, period: 'yesterday', type: 'positive' as const },
-              color: 'orange' as const
-            },
-            {
-              title: 'Onboarding Tasks',
-              value: 8,
-              icon: ClipboardList,
-              change: { value: 2, period: 'this week', type: 'negative' as const },
-              color: 'purple' as const
-            }
-          ];
-
-        case 'manager':
-          return [
-            {
-              title: 'Team Members',
-              value: 15,
-              icon: Users,
-              change: { value: 1, period: 'this month', type: 'positive' as const },
-              color: 'blue' as const
-            },
-            {
-              title: 'Active Projects',
-              value: 7,
-              icon: ClipboardList,
-              change: { value: 2, period: 'this week', type: 'positive' as const },
-              color: 'green' as const
-            },
-            {
-              title: 'Team Performance',
-              value: '94%',
-              icon: TrendingUp,
-              change: { value: 5, period: 'last month', type: 'positive' as const },
-              color: 'cyan' as const
-            },
-            {
-              title: 'Pending Reviews',
-              value: 4,
-              icon: FileText,
-              change: { value: 1, period: 'this week', type: 'neutral' as const },
-              color: 'orange' as const
-            }
-          ];
-
-        default: // employee
-          return [
-            {
-              title: 'My Tasks',
-              value: 12,
-              icon: ClipboardList,
-              change: { value: 3, period: 'yesterday', type: 'positive' as const },
-              color: 'blue' as const
-            },
-            {
-              title: 'Completed Today',
-              value: 5,
-              icon: UserCheck,
-              change: { value: 2, period: 'yesterday', type: 'positive' as const },
-              color: 'green' as const
-            },
-            {
-              title: 'Leave Balance',
-              value: 18,
-              icon: Calendar,
-              change: { value: 0, period: 'days remaining', type: 'neutral' as const },
-              color: 'cyan' as const
-            },
-            {
-              title: 'Training Progress',
-              value: '78%',
-              icon: TrendingUp,
-              change: { value: 12, period: 'this week', type: 'positive' as const },
-              color: 'purple' as const
-            }
-          ];
+        setStats({
+          totalEmployees: employeeStats.data?.total || 0,
+          activeTasks: taskStats.data?.active || 0,
+          completedTasks: taskStats.data?.completed || 0,
+          pendingTasks: taskStats.data?.pending || 0
+        });
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+        showToast.error('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
       }
     };
 
-    setStats(getStatsForRole(role));
-  };
+    fetchStats();
+  }, []);
+
+  if (!user) return null;
+
+  const canViewEmployees = user.permissions.includes('employee.read') || 
+                           user.permissions.includes('*');
+  const canManageTasks = user.permissions.includes('tasks.create') || 
+                         user.permissions.includes('*');
 
   return (
-    <DashboardLayout userRole={currentUserRole} userName={currentUserName} userEmail={currentUserEmail}>
-      <div>
-        {isLoading ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: 'hsl(var(--muted-foreground))' }}>
-            Loading dashboard...
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">
+            Welcome back, {user.firstName || user.email}!
+          </h1>
+          <p className="text-muted-foreground">
+            Role: {user.role} | Here's your dashboard overview
+          </p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {canViewEmployees && (
+            <StatsCard
+              title="Total Employees"
+              value={stats.totalEmployees.toString()}
+              icon="👥"
+              description="Active employees in the system"
+            />
+          )}
+          
+          <StatsCard
+            title="Active Tasks"
+            value={stats.activeTasks.toString()}
+            icon="⚡"
+            description="Tasks currently in progress"
+          />
+          
+          <StatsCard
+            title="Completed Tasks"
+            value={stats.completedTasks.toString()}
+            icon="✅"
+            description="Successfully completed tasks"
+          />
+          
+          <StatsCard
+            title="Pending Tasks"
+            value={stats.pendingTasks.toString()}
+            icon="⏳"
+            description="Tasks awaiting assignment"
+          />
+        </div>
+
+        {/* Role-specific content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Quick Actions */}
+          <div className="bg-card p-6 rounded-lg border shadow-sm">
+            <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+            <div className="space-y-2">
+              {canManageTasks && (
+                <button className="w-full text-left p-3 rounded-md hover:bg-accent transition-colors">
+                  📋 Create New Task
+                </button>
+              )}
+              {canViewEmployees && (
+                <button className="w-full text-left p-3 rounded-md hover:bg-accent transition-colors">
+                  👤 View Employee Directory
+                </button>
+              )}
+              <button className="w-full text-left p-3 rounded-md hover:bg-accent transition-colors">
+                📊 View My Tasks
+              </button>
+              <button className="w-full text-left p-3 rounded-md hover:bg-accent transition-colors">
+                ⏰ Log Time Entry
+              </button>
+            </div>
           </div>
-        ) : (
-          <>
-            <StatsGrid stats={stats} />
-            
-            {/* Show user management for roles that can manage users */}
-            {(['super-admin', 'hr-admin'].includes(currentUserRole)) && (
-              <UserManagement currentUserRole={currentUserRole} />
-            )}
-            
-            {/* Role-specific content can be added here */}
-            {currentUserRole === 'employee' && (
-          <div style={{ 
-            background: 'hsl(var(--card))', 
-            padding: '2rem', 
-            borderRadius: 'var(--radius)',
-            boxShadow: 'var(--shadow-card)',
-            border: '1px solid hsl(var(--border))',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ color: 'hsl(var(--foreground))', marginBottom: '1rem' }}>
-              Welcome to Go3net Technologies Dashboard
-            </h3>
-            <p style={{ color: 'hsl(var(--muted-foreground))' }}>
-              Manage your tasks, check your leave balance, and track your progress from here.
-            </p>
+
+          {/* Recent Activity */}
+          <div className="bg-card p-6 rounded-lg border shadow-sm">
+            <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 p-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-sm">Welcome to Go3net Technologies!</span>
+              </div>
+              <div className="flex items-center space-x-3 p-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-sm">Your dashboard is ready to use</span>
+              </div>
+              <div className="flex items-center space-x-3 p-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <span className="text-sm">Check out your role permissions: {user.role}</span>
+              </div>
+            </div>
           </div>
-            )}
-          </>
-        )}
+        </div>
       </div>
     </DashboardLayout>
   );

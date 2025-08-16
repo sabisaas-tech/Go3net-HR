@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 import { useAuth } from '../contexts/AuthContext';
 import { apiService } from '../services/api';
-import { Button } from '../components/ui/button';
+import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
+import { showToast } from '../services/toastService';
 import { Card } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Plus, Calendar, User } from 'lucide-react';
+import { Button } from '../components/ui/button';
 import styles from './Tasks.module.css';
 
 interface Task {
@@ -14,102 +13,133 @@ interface Task {
   description: string;
   status: string;
   priority: string;
-  dueDate: string;
   assignedTo: string;
-  createdBy: string;
+  assignedBy: string;
+  dueDate: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const Tasks = () => {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadTasks();
+    const fetchTasks = async () => {
+      try {
+        const response = await apiService.getTasks();
+        setTasks(response.data || []);
+      } catch (error: any) {
+        console.error('Failed to fetch tasks:', error);
+        showToast.error('Failed to load tasks', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
   }, []);
 
-  const loadTasks = async () => {
+  const handleStatusChange = async (taskId: string, newStatus: string) => {
     try {
-      const response = await apiService.getTasks();
-      setTasks(response.data || []);
-    } catch (error) {
-      console.error('Failed to load tasks:', error);
-    } finally {
-      setIsLoading(false);
+      await apiService.updateTaskStatus(taskId, newStatus);
+      setTasks(prev => prev.map(task => 
+        task.id === taskId ? { ...task, status: newStatus } : task
+      ));
+      showToast.success('Task status updated successfully');
+    } catch (error: any) {
+      showToast.error('Failed to update task status', error.message);
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'completed': return 'bg-green-500';
-      case 'in-progress': return 'bg-blue-500';
-      case 'pending': return 'bg-yellow-500';
-      default: return 'bg-gray-500';
+      case 'completed': return 'text-green-600 bg-green-100';
+      case 'in-progress': return 'text-blue-600 bg-blue-100';
+      case 'pending': return 'text-yellow-600 bg-yellow-100';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
-      case 'high': return 'bg-red-500';
-      case 'medium': return 'bg-orange-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-500';
+      case 'high': return 'text-red-600 bg-red-100';
+      case 'medium': return 'text-orange-600 bg-orange-100';
+      case 'low': return 'text-green-600 bg-green-100';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
   if (!user) return null;
 
   return (
-    <DashboardLayout 
-      userRole={user.role} 
-      userName={`${user.firstName} ${user.lastName}`}
-      userEmail={user.email}
-    >
+    <DashboardLayout>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1>Tasks</h1>
-          {user.permissions.includes('tasks.create') && (
-            <Button className={styles.addButton}>
-              <Plus size={18} />
-              Add Task
-            </Button>
-          )}
+          <h1>My Tasks</h1>
+          <p>Manage and track your assigned tasks</p>
         </div>
 
-        {isLoading ? (
+        {loading ? (
           <div className={styles.loading}>Loading tasks...</div>
         ) : tasks.length === 0 ? (
           <Card className={styles.emptyState}>
-            <h3>No tasks found</h3>
-            <p>You don't have any tasks assigned yet.</p>
+            <div className={styles.emptyContent}>
+              <div className={styles.emptyIcon}>📋</div>
+              <h3>No tasks assigned</h3>
+              <p>You don't have any tasks assigned at the moment.</p>
+            </div>
           </Card>
         ) : (
-          <div className={styles.taskGrid}>
-            {tasks.map(task => (
+          <div className={styles.tasksGrid}>
+            {tasks.map((task) => (
               <Card key={task.id} className={styles.taskCard}>
                 <div className={styles.taskHeader}>
-                  <h3>{task.title}</h3>
-                  <div className={styles.badges}>
-                    <Badge className={`${styles.badge} ${getStatusColor(task.status)}`}>
-                      {task.status}
-                    </Badge>
-                    <Badge className={`${styles.badge} ${getPriorityColor(task.priority)}`}>
+                  <h3 className={styles.taskTitle}>{task.title}</h3>
+                  <div className={styles.taskBadges}>
+                    <span className={`${styles.badge} ${getPriorityColor(task.priority)}`}>
                       {task.priority}
-                    </Badge>
+                    </span>
+                    <span className={`${styles.badge} ${getStatusColor(task.status)}`}>
+                      {task.status}
+                    </span>
                   </div>
                 </div>
                 
-                <p className={styles.description}>{task.description}</p>
+                <p className={styles.taskDescription}>{task.description}</p>
                 
                 <div className={styles.taskMeta}>
-                  <div className={styles.metaItem}>
-                    <Calendar size={16} />
-                    <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                  <div className={styles.taskDates}>
+                    <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
+                    <span>Created: {new Date(task.createdAt).toLocaleDateString()}</span>
                   </div>
-                  <div className={styles.metaItem}>
-                    <User size={16} />
-                    <span>Assigned by: {task.createdBy}</span>
-                  </div>
+                </div>
+
+                <div className={styles.taskActions}>
+                  {task.status !== 'completed' && (
+                    <>
+                      {task.status === 'pending' && (
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleStatusChange(task.id, 'in-progress')}
+                        >
+                          Start Task
+                        </Button>
+                      )}
+                      {task.status === 'in-progress' && (
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleStatusChange(task.id, 'completed')}
+                        >
+                          Mark Complete
+                        </Button>
+                      )}
+                    </>
+                  )}
+                  {task.status === 'completed' && (
+                    <span className={styles.completedText}>✅ Completed</span>
+                  )}
                 </div>
               </Card>
             ))}

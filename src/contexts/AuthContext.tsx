@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiService } from '../services/api';
-import { toast } from '../hooks/use-toast';
+import { showToast } from '../services/toastService';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: string;
@@ -24,6 +25,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const refreshUser = async () => {
     try {
@@ -44,6 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('Failed to refresh user:', error);
       localStorage.removeItem('authToken');
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
@@ -52,15 +55,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     try {
       const response = await apiService.login(email, password);
-      localStorage.setItem('authToken', response.data.accessToken);
+      // Fix: Get token from correct path based on network requests
+      const token = response.data.tokens?.accessToken || response.data.accessToken;
+      localStorage.setItem('authToken', token);
       await refreshUser();
-      toast({ title: 'Login successful', description: 'Welcome back!' });
+      showToast.success('Login successful', 'Welcome back!');
+      navigate('/dashboard');
     } catch (error: any) {
-      toast({ 
-        title: 'Login failed', 
-        description: error.message || 'Invalid credentials',
-        variant: 'destructive'
-      });
+      showToast.error('Login failed', error.message || 'Invalid credentials');
       throw error;
     }
   };
@@ -68,7 +70,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     localStorage.removeItem('authToken');
     setUser(null);
-    toast({ title: 'Logged out', description: 'You have been logged out successfully.' });
+    showToast.success('Logged out', 'You have been logged out successfully.');
+    navigate('/');
   };
 
   useEffect(() => {
