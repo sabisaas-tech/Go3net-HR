@@ -127,7 +127,7 @@
 }
 
 .completedText {
-  color: hsl(var(--go3net-green));
+  color: hsl(var(--primary));
   font-weight: 500;
   font-size: 0.875rem;
 }

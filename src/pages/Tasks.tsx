@@ -5,7 +5,6 @@ import { DashboardLayout } from '../components/Dashboard/DashboardLayout';
 import { showToast } from '../services/toastService';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import styles from './Tasks.module.css';
 
 interface Task {
   id: string;
@@ -75,48 +74,48 @@ const Tasks = () => {
 
   return (
     <DashboardLayout>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h1>My Tasks</h1>
-          <p>Manage and track your assigned tasks</p>
+      <div className="p-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">My Tasks</h1>
+          <p className="text-muted-foreground">Manage and track your assigned tasks</p>
         </div>
 
         {loading ? (
-          <div className={styles.loading}>Loading tasks...</div>
+          <div className="flex justify-center items-center h-48 text-muted-foreground">Loading tasks...</div>
         ) : tasks.length === 0 ? (
-          <Card className={styles.emptyState}>
-            <div className={styles.emptyContent}>
-              <div className={styles.emptyIcon}>📋</div>
-              <h3>No tasks assigned</h3>
-              <p>You don't have any tasks assigned at the moment.</p>
+          <Card className="p-12">
+            <div className="text-center space-y-4">
+              <div className="text-6xl opacity-50">📋</div>
+              <h3 className="text-xl font-semibold text-foreground">No tasks assigned</h3>
+              <p className="text-muted-foreground">You don't have any tasks assigned at the moment.</p>
             </div>
           </Card>
         ) : (
-          <div className={styles.tasksGrid}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {tasks.map((task) => (
-              <Card key={task.id} className={styles.taskCard}>
-                <div className={styles.taskHeader}>
-                  <h3 className={styles.taskTitle}>{task.title}</h3>
-                  <div className={styles.taskBadges}>
-                    <span className={`${styles.badge} ${getPriorityColor(task.priority)}`}>
+              <Card key={task.id} className="p-6 space-y-4 transition-all hover:shadow-md hover:-translate-y-1">
+                <div className="flex justify-between items-start gap-4">
+                  <h3 className="text-lg font-semibold text-foreground flex-1">{task.title}</h3>
+                  <div className="flex gap-2 flex-wrap">
+                    <span className={`px-2 py-1 text-xs font-medium rounded-md ${getPriorityColor(task.priority)}`}>
                       {task.priority}
                     </span>
-                    <span className={`${styles.badge} ${getStatusColor(task.status)}`}>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-md ${getStatusColor(task.status)}`}>
                       {task.status}
                     </span>
                   </div>
                 </div>
                 
-                <p className={styles.taskDescription}>{task.description}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">{task.description}</p>
                 
-                <div className={styles.taskMeta}>
-                  <div className={styles.taskDates}>
+                <div className="border-t pt-4 space-y-2">
+                  <div className="flex justify-between text-sm text-muted-foreground">
                     <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>
                     <span>Created: {new Date(task.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
 
-                <div className={styles.taskActions}>
+                <div className="flex gap-2 items-center">
                   {task.status !== 'completed' && (
                     <>
                       {task.status === 'pending' && (
@@ -138,7 +137,7 @@ const Tasks = () => {
                     </>
                   )}
                   {task.status === 'completed' && (
-                    <span className={styles.completedText}>✅ Completed</span>
+                    <span className="text-primary font-medium text-sm">✅ Completed</span>
                   )}
                 </div>
               </Card>

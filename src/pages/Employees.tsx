@@ -6,7 +6,6 @@ import { showToast } from '../services/toastService';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import styles from './Employees.module.css';
 
 interface Employee {
   id: string;
@@ -68,11 +67,11 @@ const Employees = () => {
   if (!canViewEmployees) {
     return (
       <DashboardLayout>
-        <Card className={styles.accessDenied}>
-          <div className={styles.accessDeniedContent}>
-            <div className={styles.accessDeniedIcon}>🚫</div>
-            <h3>Access Denied</h3>
-            <p>You don't have permission to view employee information.</p>
+        <Card className="p-12">
+          <div className="text-center space-y-4">
+            <div className="text-6xl opacity-50">🚫</div>
+            <h3 className="text-xl font-semibold text-foreground">Access Denied</h3>
+            <p className="text-muted-foreground">You don't have permission to view employee information.</p>
           </div>
         </Card>
       </DashboardLayout>
@@ -81,30 +80,30 @@ const Employees = () => {
 
   return (
     <DashboardLayout>
-      <div className={styles.container}>
-        <div className={styles.header}>
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-8 gap-4">
           <div>
-            <h1>Employees</h1>
-            <p>Manage and view employee information</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Employees</h1>
+            <p className="text-muted-foreground">Manage and view employee information</p>
           </div>
-          <div className={styles.headerActions}>
+          <div className="flex gap-4 items-center">
             <Input
               placeholder="Search employees..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.searchInput}
+              className="w-64"
             />
           </div>
         </div>
 
         {loading ? (
-          <div className={styles.loading}>Loading employees...</div>
+          <div className="flex justify-center items-center h-48 text-muted-foreground">Loading employees...</div>
         ) : filteredEmployees.length === 0 ? (
-          <Card className={styles.emptyState}>
-            <div className={styles.emptyContent}>
-              <div className={styles.emptyIcon}>👥</div>
-              <h3>No employees found</h3>
-              <p>
+          <Card className="p-12">
+            <div className="text-center space-y-4">
+              <div className="text-6xl opacity-50">👥</div>
+              <h3 className="text-xl font-semibold text-foreground">No employees found</h3>
+              <p className="text-muted-foreground">
                 {searchTerm 
                   ? 'No employees match your search criteria.'
                   : 'No employees have been added to the system yet.'
@@ -113,40 +112,40 @@ const Employees = () => {
             </div>
           </Card>
         ) : (
-          <div className={styles.employeesGrid}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {filteredEmployees.map((employee) => (
-              <Card key={employee.id} className={styles.employeeCard}>
-                <div className={styles.employeeHeader}>
-                  <div className={styles.employeeAvatar}>
+              <Card key={employee.id} className="p-6 transition-all hover:shadow-md hover:-translate-y-1">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-lg">
                     {employee.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
                   </div>
-                  <div className={styles.employeeInfo}>
-                    <h3 className={styles.employeeName}>{employee.fullName}</h3>
-                    <p className={styles.employeeId}>ID: {employee.employeeId}</p>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-foreground">{employee.fullName}</h3>
+                    <p className="text-sm text-muted-foreground">ID: {employee.employeeId}</p>
                   </div>
-                  <span className={`${styles.badge} ${getStatusColor(employee.accountStatus)}`}>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-md ${getStatusColor(employee.accountStatus)}`}>
                     {employee.accountStatus}
                   </span>
                 </div>
                 
-                <div className={styles.employeeDetails}>
-                  <div className={styles.detail}>
-                    <span className={styles.detailLabel}>Email:</span>
-                    <span className={styles.detailValue}>{employee.email}</span>
+                <div className="space-y-3 p-4 bg-muted/10 rounded-lg mb-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-muted-foreground">Email:</span>
+                    <span className="text-sm text-foreground">{employee.email}</span>
                   </div>
-                  <div className={styles.detail}>
-                    <span className={styles.detailLabel}>Role:</span>
-                    <span className={styles.detailValue}>{employee.role}</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-muted-foreground">Role:</span>
+                    <span className="text-sm text-foreground">{employee.role}</span>
                   </div>
-                  <div className={styles.detail}>
-                    <span className={styles.detailLabel}>Joined:</span>
-                    <span className={styles.detailValue}>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-muted-foreground">Joined:</span>
+                    <span className="text-sm text-foreground">
                       {new Date(employee.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
 
-                <div className={styles.employeeActions}>
+                <div className="flex gap-2 justify-end">
                   <Button size="sm" variant="outline">
                     View Profile
                   </Button>
@@ -161,7 +160,7 @@ const Employees = () => {
           </div>
         )}
 
-        <div className={styles.summary}>
+        <div className="flex justify-center py-4 border-t text-sm text-muted-foreground">
           <p>Showing {filteredEmployees.length} of {employees.length} employees</p>
         </div>
       </div>

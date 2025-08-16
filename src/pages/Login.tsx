@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import styles from './Login.module.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -32,15 +31,15 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <Card className={styles.loginCard}>
-        <div className={styles.header}>
-          <h1>Go3net Technologies</h1>
-          <p>Sign in to your account</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/50 p-8">
+      <Card className="w-full max-w-md p-8 shadow-lg">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Go3net Technologies</h1>
+          <p className="text-muted-foreground">Sign in to your account</p>
         </div>
         
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.field}>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
@@ -52,7 +51,7 @@ const Login = () => {
             />
           </div>
           
-          <div className={styles.field}>
+          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
@@ -66,7 +65,7 @@ const Login = () => {
           
           <Button 
             type="submit" 
-            className={styles.submitButton}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in...' : 'Sign In'}

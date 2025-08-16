@@ -4,7 +4,6 @@
   flex-direction: column;
 }
 
-/* Header Styles */
 .header {
   position: sticky;
   top: 0;
@@ -14,7 +13,7 @@
 }
 
 .topBar {
-  background: hsl(var(--go3net-blue));
+  background: hsl(var(--primary));
   color: white;
   padding: 0.5rem 0;
 }
@@ -52,15 +51,15 @@
 }
 
 .logoText {
-  color: hsl(var(--go3net-green));
+  color: hsl(var(--primary));
 }
 
 .logoNet {
-  color: hsl(var(--go3net-dark-blue));
+  color: hsl(var(--foreground));
 }
 
 .logoArrow {
-  color: hsl(var(--go3net-green));
+  color: hsl(var(--primary));
   font-size: 1.25rem;
 }
 
@@ -77,12 +76,11 @@
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   transition: all 0.2s;
-  position: relative;
 }
 
 .navLink:hover {
-  color: hsl(var(--go3net-blue));
-  background: hsl(var(--go3net-blue) / 0.1);
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
 }
 
 .authButtons {
@@ -90,12 +88,9 @@
   gap: 1rem;
 }
 
-/* Hero Styles */
 .hero {
   flex: 1;
-  background: linear-gradient(135deg, 
-    hsl(var(--background)) 0%, 
-    hsl(var(--go3net-light-grey)) 100%);
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
   padding: 4rem 0;
   position: relative;
   overflow: hidden;
@@ -138,22 +133,22 @@
 }
 
 .primaryButton {
-  background: hsl(var(--go3net-blue));
-  color: white;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 .primaryButton:hover {
-  background: hsl(var(--go3net-blue) / 0.9);
+  background: hsl(var(--primary) / 0.9);
 }
 
 .secondaryButton {
-  border-color: hsl(var(--go3net-green));
-  color: hsl(var(--go3net-green));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary));
 }
 
 .secondaryButton:hover {
-  background: hsl(var(--go3net-green));
-  color: white;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 .heroGraphic {
@@ -167,9 +162,7 @@
 .graphicShape {
   width: 300px;
   height: 300px;
-  background: linear-gradient(135deg, 
-    hsl(var(--go3net-blue)), 
-    hsl(var(--go3net-dark-blue)));
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8));
   border-radius: 50% 10% 50% 10%;
   position: relative;
   animation: float 6s ease-in-out infinite;
@@ -179,7 +172,7 @@
   position: absolute;
   width: 150px;
   height: 150px;
-  background: hsl(var(--go3net-green));
+  background: hsl(var(--accent));
   border-radius: 50%;
   top: -20px;
   right: -20px;
@@ -196,10 +189,9 @@
   }
 }
 
-/* Services Styles */
 .services {
   padding: 4rem 0;
-  background: white;
+  background: hsl(var(--background));
 }
 
 .sectionContent {
@@ -217,7 +209,7 @@
 }
 
 .highlight {
-  color: hsl(var(--go3net-blue));
+  color: hsl(var(--primary));
   position: relative;
 }
 
@@ -228,7 +220,7 @@
   left: 0;
   width: 100%;
   height: 3px;
-  background: hsl(var(--go3net-blue));
+  background: hsl(var(--primary));
 }
 
 .serviceCards {
@@ -242,13 +234,13 @@
   text-align: center;
   border: 1px solid hsl(var(--border));
   transition: all 0.3s;
-  background: white;
+  background: hsl(var(--card));
 }
 
 .serviceCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border-color: hsl(var(--go3net-blue));
+  border-color: hsl(var(--primary));
 }
 
 .serviceIcon {
@@ -268,10 +260,9 @@
   line-height: 1.6;
 }
 
-/* Footer Styles */
 .footer {
-  background: hsl(var(--go3net-dark-blue));
-  color: white;
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
   padding: 3rem 0 1rem;
 }
 
@@ -285,33 +276,32 @@
 }
 
 .footerSection h4 {
-  color: white;
+  color: hsl(var(--foreground));
   font-size: 1.25rem;
   margin-bottom: 1rem;
 }
 
 .footerSection p,
 .footerSection a {
-  color: rgba(255, 255, 255, 0.8);
+  color: hsl(var(--muted-foreground));
   text-decoration: none;
   line-height: 1.8;
   display: block;
 }
 
 .footerSection a:hover {
-  color: hsl(var(--go3net-green));
+  color: hsl(var(--primary));
 }
 
 .footerBottom {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid hsl(var(--border));
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: hsl(var(--muted-foreground));
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .topBarContent {
     flex-direction: column;
