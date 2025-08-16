@@ -111,6 +111,22 @@
   align-items: flex-start;
 }
 
+.logoutButton {
+  background: none;
+  border: none;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  transition: var(--transition-smooth);
+  margin-left: 0.5rem;
+}
+
+.logoutButton:hover {
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 0.1);
+}
+
 .userName {
   font-weight: 600;
   color: hsl(var(--foreground));

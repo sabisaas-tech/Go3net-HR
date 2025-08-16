@@ -1,0 +1,62 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, hsl(var(--go3net-blue)), hsl(var(--go3net-dark-blue)));
+  padding: 2rem;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-elegant);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: hsl(var(--go3net-blue));
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: hsl(var(--muted-foreground));
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.submitButton {
+  background: hsl(var(--go3net-blue));
+  color: white;
+  transition: var(--transition-smooth);
+}
+
+.submitButton:hover {
+  background: hsl(var(--go3net-dark-blue));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  transform: none;
+}

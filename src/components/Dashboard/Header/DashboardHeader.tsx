@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../../../contexts/AuthContext';
 import styles from './DashboardHeader.module.css';
-import { Menu, Search, Bell, ChevronRight } from 'lucide-react';
+import { Menu, Search, Bell, ChevronRight, LogOut } from 'lucide-react';
 
 interface DashboardHeaderProps {
   userName: string;
@@ -17,6 +18,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onMenuToggle
 }) => {
   const location = useLocation();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   const getPageTitle = (pathname: string) => {
     const routes: { [key: string]: string } = {
@@ -99,6 +105,13 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <div className={styles.userName}>{userName}</div>
             <div className={styles.userRole}>{userRole.replace('-', ' ')}</div>
           </div>
+          <button 
+            className={styles.logoutButton} 
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <LogOut size={16} />
+          </button>
         </div>
       </div>
     </div>

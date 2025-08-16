@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './UserManagement.module.css';
 import { Plus, Search, Edit, Trash2, Shield } from 'lucide-react';
+import { apiService } from '../../../services/api';
 
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: string;
   department: string;
@@ -19,55 +21,34 @@ interface UserManagementProps {
 export const UserManagement: React.FC<UserManagementProps> = ({ currentUserRole }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data - in real app, this would come from your role service
-  const [users] = useState<User[]>([
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@go3net.com.ng',
-      role: 'super-admin',
-      department: 'IT',
-      lastActive: '2 hours ago',
-      isActive: true
-    },
-    {
-      id: '2',
-      name: 'Sarah Johnson',
-      email: 'sarah.johnson@go3net.com.ng',
-      role: 'hr-admin',
-      department: 'Human Resources',
-      lastActive: '5 minutes ago',
-      isActive: true
-    },
-    {
-      id: '3',
-      name: 'Mike Wilson',
-      email: 'mike.wilson@go3net.com.ng',
-      role: 'manager',
-      department: 'Operations',
-      lastActive: '1 day ago',
-      isActive: true
-    },
-    {
-      id: '4',
-      name: 'Emily Davis',
-      email: 'emily.davis@go3net.com.ng',
-      role: 'hr-staff',
-      department: 'Human Resources',
-      lastActive: '3 hours ago',
-      isActive: true
-    },
-    {
-      id: '5',
-      name: 'David Brown',
-      email: 'david.brown@go3net.com.ng',
-      role: 'employee',
-      department: 'Marketing',
-      lastActive: '30 minutes ago',
-      isActive: true
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
+  const loadUsers = async () => {
+    try {
+      const response = await apiService.getEmployees();
+      const employees = response.data || [];
+      const formattedUsers = employees.map((emp: any) => ({
+        id: emp.id,
+        firstName: emp.firstName,
+        lastName: emp.lastName,
+        email: emp.email,
+        role: emp.role || 'employee',
+        department: emp.department || 'Unknown',
+        lastActive: new Date(emp.updatedAt || emp.createdAt).toLocaleDateString(),
+        isActive: emp.status === 'active'
+      }));
+      setUsers(formattedUsers);
+    } catch (error) {
+      console.error('Failed to load users:', error);
+    } finally {
+      setIsLoading(false);
     }
-  ]);
+  };
 
   const getRoleTagClass = (role: string) => {
     const roleMap: { [key: string]: string } = {
@@ -80,12 +61,13 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUserRole 
     return roleMap[role] || 'employee';
   };
 
-  const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const getInitials = (user: User) => {
+    return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const fullName = `${user.firstName} ${user.lastName}`;
+    const matchesSearch = fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.department.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
@@ -134,20 +116,23 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUserRole 
         </select>
       </div>
 
-      <div className={styles.userGrid}>
-        {filteredUsers.map(user => (
-          <div key={user.id} className={styles.userCard}>
-            <div className={styles.userHeader}>
-              <div className={styles.userInfo}>
-                <div className={styles.userAvatar}>
-                  {getInitials(user.name)}
+      {isLoading ? (
+        <div className={styles.loading}>Loading users...</div>
+      ) : (
+        <div className={styles.userGrid}>
+          {filteredUsers.map(user => (
+            <div key={user.id} className={styles.userCard}>
+              <div className={styles.userHeader}>
+                <div className={styles.userInfo}>
+                  <div className={styles.userAvatar}>
+                    {getInitials(user)}
+                  </div>
+                  <div className={styles.userDetails}>
+                    <h4>{user.firstName} {user.lastName}</h4>
+                    <p>{user.email}</p>
+                    <p>{user.department}</p>
+                  </div>
                 </div>
-                <div className={styles.userDetails}>
-                  <h4>{user.name}</h4>
-                  <p>{user.email}</p>
-                  <p>{user.department}</p>
-                </div>
-              </div>
               
               {canManageUsers && (
                 <div className={styles.userActions}>
@@ -176,7 +161,8 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUserRole 
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

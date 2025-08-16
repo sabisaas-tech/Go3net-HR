@@ -73,6 +73,12 @@
   min-width: 150px;
 }
 
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: hsl(var(--muted-foreground));
+}
+
 .userGrid {
   display: grid;
   gap: 1rem;
