@@ -61,7 +61,29 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Go3net Brand Colors
+				go3net: {
+					blue: 'hsl(var(--go3net-blue))',
+					'blue-dark': 'hsl(var(--go3net-blue-dark))',
+					green: 'hsl(var(--go3net-green))',
+					'grey-light': 'hsl(var(--go3net-grey-light))',
+					'grey-dark': 'hsl(var(--go3net-grey-dark))',
+					orange: 'hsl(var(--go3net-orange))',
+					purple: 'hsl(var(--go3net-purple))',
+					cyan: 'hsl(var(--go3net-cyan))',
+					pink: 'hsl(var(--go3net-pink))'
 				}
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-accent': 'var(--gradient-accent)',
+				'gradient-hero': 'var(--gradient-hero)'
+			},
+			boxShadow: {
+				'elegant': 'var(--shadow-elegant)',
+				'card': 'var(--shadow-card)',
+				'hover': 'var(--shadow-hover)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

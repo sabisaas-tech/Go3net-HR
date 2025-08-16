@@ -1,0 +1,156 @@
+.sidebar {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: hsl(var(--card));
+}
+
+.logo {
+  padding: 1.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logoIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--gradient-primary);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.logoText {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: hsl(var(--foreground));
+}
+
+.logoTextBlue {
+  color: hsl(var(--go3net-blue));
+}
+
+.logoTextGreen {
+  color: hsl(var(--go3net-green));
+}
+
+.navigation {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto;
+}
+
+.navSection {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  padding: 0 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.navItem:hover {
+  background: hsl(var(--go3net-grey-light));
+  color: hsl(var(--go3net-blue));
+}
+
+.navItem.active {
+  background: hsl(var(--go3net-blue) / 0.1);
+  color: hsl(var(--go3net-blue));
+  border-right: 3px solid hsl(var(--go3net-blue));
+}
+
+.navIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.navText {
+  font-weight: 500;
+}
+
+.userSection {
+  padding: 1.5rem;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--go3net-grey-light));
+}
+
+.roleTag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-top: 0.5rem;
+}
+
+.roleTag.superAdmin {
+  background: hsl(var(--go3net-purple) / 0.1);
+  color: hsl(var(--go3net-purple));
+}
+
+.roleTag.hrAdmin {
+  background: hsl(var(--go3net-blue) / 0.1);
+  color: hsl(var(--go3net-blue));
+}
+
+.roleTag.manager {
+  background: hsl(var(--go3net-green) / 0.1);
+  color: hsl(var(--go3net-green));
+}
+
+.roleTag.hrStaff {
+  background: hsl(var(--go3net-cyan) / 0.1);
+  color: hsl(var(--go3net-cyan));
+}
+
+.roleTag.employee {
+  background: hsl(var(--go3net-orange) / 0.1);
+  color: hsl(var(--go3net-orange));
+}
+
+.mobileCloseBtn {
+  display: none;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .mobileCloseBtn {
+    display: block;
+  }
+}

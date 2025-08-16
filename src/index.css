@@ -8,51 +8,70 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Go3net Brand Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 10%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Bright Blue - Go3net Primary */
+    --primary: 207 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Light Grey - Go3net Secondary */
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Green - Go3net Accent */
+    --accent: 142 76% 36%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 214 31% 91%;
+    --input: 214 31% 91%;
+    --ring: 207 100% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Dashboard specific colors */
+    --go3net-blue: 207 100% 50%;
+    --go3net-blue-dark: 207 100% 40%;
+    --go3net-green: 142 76% 36%;
+    --go3net-grey-light: 210 20% 96%;
+    --go3net-grey-dark: 210 10% 20%;
+    --go3net-orange: 25 100% 60%;
+    --go3net-purple: 260 80% 60%;
+    --go3net-cyan: 190 80% 50%;
+    --go3net-pink: 320 70% 60%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--go3net-blue)), hsl(var(--go3net-blue-dark)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--go3net-green)), hsl(142 76% 26%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--go3net-blue)) 0%, hsl(var(--go3net-green)) 100%);
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--go3net-blue) / 0.3);
+    --shadow-card: 0 4px 12px -2px hsl(0 0% 0% / 0.08);
+    --shadow-hover: 0 8px 25px -5px hsl(var(--go3net-blue) / 0.25);
 
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 207 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 20% 96%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 214 31% 91%;
+    --sidebar-ring: 207 100% 50%;
   }
 
   .dark {
