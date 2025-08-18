@@ -41,7 +41,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser({
         ...userData.data,
         role: rolesData.data?.roles?.[0]?.roleName || 'employee',
-        permissions: rolesData.data?.roles?.[0]?.permissions || []
+        permissions: Array.isArray(rolesData.data?.roles?.[0]?.permissions) 
+          ? rolesData.data.roles[0].permissions 
+          : []
       });
     } catch (error) {
       console.error('Failed to refresh user:', error);

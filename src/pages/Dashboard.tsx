@@ -51,10 +51,10 @@ const Dashboard = () => {
 
   if (!user) return null;
 
-  const canViewEmployees = user.permissions.includes('employee.read') || 
-                           user.permissions.includes('*');
-  const canManageTasks = user.permissions.includes('tasks.create') || 
-                         user.permissions.includes('*');
+  const canViewEmployees = user.permissions?.includes('employee.read') || 
+                           user.permissions?.includes('*') || false;
+  const canManageTasks = user.permissions?.includes('tasks.create') || 
+                         user.permissions?.includes('*') || false;
 
   return (
     <DashboardLayout>

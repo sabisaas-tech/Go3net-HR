@@ -17,7 +17,7 @@ export const Sidebar: React.FC = () => {
 
   const hasPermission = (permission: string | null) => {
     if (!permission) return true;
-    if (!user) return false;
+    if (!user || !user.permissions) return false;
     return user.permissions.includes(permission) || user.permissions.includes('*');
   };
 
