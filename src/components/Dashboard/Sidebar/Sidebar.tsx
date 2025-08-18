@@ -17,7 +17,7 @@ export const Sidebar: React.FC = () => {
 
   const hasPermission = (permission: string | null) => {
     if (!permission) return true;
-    if (!user || !user.permissions) return false;
+    if (!user || !user.permissions || !Array.isArray(user.permissions)) return false;
     return user.permissions.includes(permission) || user.permissions.includes('*');
   };
 
@@ -41,7 +41,7 @@ export const Sidebar: React.FC = () => {
       
       <nav className="p-4">
         <ul className="space-y-2">
-          {navigationItems
+          {(Array.isArray(navigationItems) ? navigationItems : [])
             .filter(item => hasPermission(item.permission))
             .map((item) => (
               <li key={item.path}>
