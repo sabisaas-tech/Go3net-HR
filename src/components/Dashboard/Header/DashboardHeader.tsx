@@ -24,7 +24,7 @@ export const DashboardHeader: React.FC = () => {
           </div>
           
           <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-semibold text-sm">
-            {user?.firstName ? user.firstName[0].toUpperCase() : user?.email[0].toUpperCase()}
+            {user?.firstName ? user.firstName[0]?.toUpperCase() : user?.email?.[0]?.toUpperCase() || 'U'}
           </div>
           
           <Button 
